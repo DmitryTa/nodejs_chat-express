@@ -1,0 +1,73 @@
+<% layout('layout/page') %>
+
+<section class="login">
+	<div class="container">
+		<div class="info">
+			<h1 class="info-title">Регистрация и вход</h1>
+			<p class="info-text">Введите имя пользователя и пароль. Если такого пользователя нет - он будет создан</p>
+		</div>
+		<form class="login__form">
+			<label for="input-name" class="login__label">Логин</label>
+			<input type="text" class="login__input" id="input-name" name="username" required></input>
+			<label for="input-password" class="login__label">Пароль</label>
+			<input type="password" class="login__input" id="input-password" name="password" required></input>
+			<input type="submit" class="login__button" value="Войти">
+		</form>
+	</div>
+</section>
+
+<script>
+	document.forms[0].onsubmit = function(e) {
+		var form = this;
+
+		form.querySelector('.login__button').value = 'Проверяю';
+
+		var str = $("form").serialize();
+		
+		var xhr = new XMLHttpRequest(); 
+		xhr.open('POST', '/login', true);
+		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+		
+		xhr.onreadystatechange = function() {
+  			if (this.readyState != 4) return;
+
+  			if (xhr.status == 200) {
+  				document.querySelector('.login').classList.add('login_success');
+  				setTimeout(function() {
+  					window.location.href = '/chat';
+  				},450);
+		  	} else {
+		  		if(xhr.status == 403) {
+		  			var span = document.createElement('span');
+		  			span.classList.add('login-form__password-error-text');
+		  			span.textContent = 'Неверный логин или пароль';
+		  			document.forms[0].password.value = '';
+		  			document.forms[0].password.blur();
+		  			form.querySelector('.login__button').value = 'Войти';
+
+					form.appendChild(span);
+		  			
+		  			removeTextErr(span);
+		  			
+		  		} else  {
+		  			var err = xhr.responseText;
+		    		form.innerHTML = err;
+		  		}
+		  	}
+		}
+
+		xhr.send(str);
+		
+		return false;
+		
+	}
+
+	function removeTextErr(elem) {
+		document.forms[0].password.onfocus = function() {
+			elem.parentElement.removeChild(elem);
+			document.forms[0].password.onfocus = null;
+		}
+	}
+
+
+</script>

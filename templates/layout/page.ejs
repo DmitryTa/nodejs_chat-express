@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+	<title><%=blocks.title %></title>
+
+	<link href="https://fonts.googleapis.com/css?family=Roboto&amp;subset=cyrillic" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="http://localhost:3000/css/style.css">
+</head>
+<body>
+	<header class="header">
+		<div class="container">
+			<div class="header__logo">
+				<span class="header__logo-text"><a href="/">Logo here</a></span>
+			</div>
+			
+			<% if (user) { %>
+			<span class="header__chat">
+				<a href="/chat" class="header__chat-text">Чат</a>
+				<span>User: <%=user.get('username') %></span>
+			</span>
+			<% } %>
+			
+			<div class="header__login">
+			<% if (user) { %>
+				<a href="" class="header__login-text" onclick="$('<form method=POST action=/logout>').submit(); return false">Выйти</a>
+			<% } else { %>
+				<a href="/login" class="header__login-text">Войти</a>
+			<% } %>
+			</div>
+		</div>
+	</header>
+	<script src="https://code.jquery.com/jquery-3.0.0.js"></script>
+	<section class="body-container body-container_appear">
+		<%-body -%>
+	</section>
+	<script src="http://localhost:3000/js/scripts.js"></script>
+</body>
+</html>
